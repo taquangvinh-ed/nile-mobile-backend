@@ -12,6 +12,8 @@ public class PaymentDetails {
     private String VNPAYTransactionNo;
 
     public PaymentDetails() {
+        this.status = PaymentStatus.PENDING; // Gán giá trị mặc định
+        this.paymentMethod = null;
     }
 
     public PaymentDetails(PaymentMethod paymentMethod, PaymentStatus status, String paymentId, String VNPAYPaymentUrl, String VNPAYTransactionRef, String VNPAYTransactionNo) {

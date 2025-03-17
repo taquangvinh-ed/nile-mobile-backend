@@ -131,4 +131,19 @@ public class CartServiceImp implements CartService {
         }
         return orderDetails;
     }
+
+    @Transactional
+    @Override
+    public List<OrderDetail> convertCartItemsToOrderDetails(List<CartItem> cartItems, Order order) {
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItem cartItem : cartItems) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setVariation(cartItem.getVariation());
+            orderDetail.setQuantity(cartItem.getQuantity());
+            orderDetail.setSubtotal(cartItem.getSubtotal());
+            orderDetails.add(orderDetail);
+        }
+        return orderDetails;
+    }
 }

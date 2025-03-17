@@ -8,6 +8,8 @@ import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.OrderDTO;
 import com.nilemobile.backend.service.OrderService;
 import com.nilemobile.backend.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,8 @@ public class OrderController {
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity<OrderDTO> createOrder(@RequestParam Long userId, @RequestBody Address shippingAddress) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestParam Long userId, @RequestBody(required = false) Address shippingAddress) {
+        Logger logger = LoggerFactory.getLogger(OrderController.class);
         try {
             User user = userService.findUserById(userId);
             if (user == null) {
@@ -36,9 +39,14 @@ public class OrderController {
             }
             Order order = orderService.createOrder(user, shippingAddress);
             OrderDTO orderDTO = OrderMapper.toDTO(order);
+            if (orderDTO == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
             return ResponseEntity.ok(orderDTO);
         } catch (Orderexception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -71,6 +79,19 @@ public class OrderController {
     public ResponseEntity<OrderDTO> confirmOrder(@PathVariable Long orderId) {
         try {
             Order order = orderService.confirmOrder(orderId);
+            OrderDTO orderDTO = OrderMapper.toDTO(order);
+            return ResponseEntity.ok(orderDTO);
+        } catch (Orderexception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping("/{orderId}/update-address")
+    public ResponseEntity<OrderDTO> updateOrderAddress(
+            @PathVariable Long orderId,
+            @RequestBody Address shippingAddress) {
+        try {
+            Order order = orderService.updateOrderAddress(orderId, shippingAddress);
             OrderDTO orderDTO = OrderMapper.toDTO(order);
             return ResponseEntity.ok(orderDTO);
         } catch (Orderexception e) {

@@ -34,12 +34,12 @@ public class Order {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "status", column = @Column(name = "payment_status", length = 20, nullable = false))
+            @AttributeOverride(name = "status", column = @Column(name = "payment_status", length = 20, nullable = true))
     })
     PaymentDetails paymentDetails = new PaymentDetails();
 
     @OneToOne
-    @JoinColumn(name = "addressId", referencedColumnName = "address_id")
+    @JoinColumn(name = "addressId", referencedColumnName = "address_id",nullable = true)
     private Address shippingAddress;
 
     private int totalItem;

@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 
 public class OrderMapper {
     public static OrderDTO toDTO(Order order) {
-        if (order == null) return null;
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
 
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
@@ -22,7 +24,7 @@ public class OrderMapper {
         dto.setTotalItem(order.getTotalItem());
         dto.setStatus(order.getStatus().name());
         dto.setUserId(order.getUser().getUserId());
-        dto.setShippingAddress(toAddressDTO(order.getShippingAddress()));
+            dto.setShippingAddress(toAddressDTO(order.getShippingAddress()));
         dto.setOrderDetails(toOrderDetailDTOs(order.getOrderDetails()));
         return dto;
     }

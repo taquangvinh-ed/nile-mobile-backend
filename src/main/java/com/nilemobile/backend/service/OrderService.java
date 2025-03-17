@@ -12,6 +12,8 @@ public interface OrderService {
 
     public Order createOrder(User user, Address shippingAddress);
 
+    Order createOrder(User user, Address shippingAddress, List<Long> selectedVariationIds);
+
     public Order findOrderById(Long orderId) throws Orderexception;
 
     public List<Order> orderHistory(Long userId);
@@ -35,4 +37,5 @@ public interface OrderService {
 
     public List<OrderDTO> filterOrderByStatus(String status);
 
+    Order updateOrderAddress(Long orderId, Address shippingAddress) throws Orderexception;
 }
